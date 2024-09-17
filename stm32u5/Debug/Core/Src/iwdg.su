@@ -1,0 +1,11 @@
+../Drivers/CMSIS/Include/core_cm33.h:2378:26:__NVIC_GetPriorityGrouping	4	static
+../Drivers/CMSIS/Include/core_cm33.h:2390:22:__NVIC_EnableIRQ	16	static,ignoring_inline_asm
+../Drivers/CMSIS/Include/core_cm33.h:2587:22:__NVIC_SetPriority	16	static
+../Drivers/CMSIS/Include/core_cm33.h:2634:26:NVIC_EncodePriority	40	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:143:22:LL_IWDG_Enable	16	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:154:22:LL_IWDG_ReloadCounter	16	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:165:22:LL_IWDG_EnableWriteAccess	16	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:197:22:LL_IWDG_SetPrescaler	16	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:229:22:LL_IWDG_SetReloadCounter	16	static
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:393:26:LL_IWDG_IsReady	16	static
+../Core/Src/iwdg.c:28:6:MX_IWDG_Init	8	static

@@ -1,0 +1,11 @@
+../Drivers/CMSIS/Include/core_cm33.h:2378:26:__NVIC_GetPriorityGrouping	1
+../Drivers/CMSIS/Include/core_cm33.h:2390:22:__NVIC_EnableIRQ	2
+../Drivers/CMSIS/Include/core_cm33.h:2587:22:__NVIC_SetPriority	2
+../Drivers/CMSIS/Include/core_cm33.h:2634:26:NVIC_EncodePriority	2
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:143:22:LL_IWDG_Enable	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:154:22:LL_IWDG_ReloadCounter	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:165:22:LL_IWDG_EnableWriteAccess	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:197:22:LL_IWDG_SetPrescaler	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:229:22:LL_IWDG_SetReloadCounter	1
+../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_iwdg.h:393:26:LL_IWDG_IsReady	2
+../Core/Src/iwdg.c:28:6:MX_IWDG_Init	2
