@@ -1,7 +1,0 @@
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_rcc.h:3784:22:LL_RCC_EnableRTC	1
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_rtc.h:4912:22:LL_RTC_SetRtcPrivilege	1
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_rtc.h:4987:22:LL_RTC_SetBackupRegisterPrivilege	1
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_rtc.h:5098:22:LL_RTC_SetBackupRegProtection	1
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_bus.h:2805:22:LL_APB3_GRP1_EnableClock	1
-../Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_bus.h:3107:22:LL_SRDAMR_GRP1_EnableAutonomousClock	1
-../Core/Src/rtc.c:28:6:MX_RTC_Init	2
