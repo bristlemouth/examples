@@ -24,6 +24,7 @@
 #include "icache.h"
 #include "iwdg.h"
 #include "usart.h"
+#include "memorymap.h"
 #include "rtc.h"
 #include "spi.h"
 #include "usb_otg.h"

@@ -51,7 +51,7 @@ void bm_example_init(void) {
       .reset_param = adin1110_reset_gpio_ip,
       .append_crc = false,
   };
-  int err = adin1110_init(&adin1110, &adin1110_ip);
+  adin1110_init(&adin1110, &adin1110_ip);
 }
 
 void bm_example_update(void) {}
