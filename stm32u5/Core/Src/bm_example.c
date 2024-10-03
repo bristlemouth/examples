@@ -6,18 +6,10 @@
  */
 
 #include "adin1110.h"
+#include "stm32_gpio.h"
+#include "stm32_spi.h"
 
 void bm_example_init(void) {
-  const struct no_os_gpio_platform_ops stm32_gpio_ops = {
-      .gpio_ops_get = NULL,
-      .gpio_ops_get_optional = NULL,
-      .gpio_ops_remove = NULL,
-      .gpio_ops_direction_input = NULL,
-      .gpio_ops_direction_output = NULL,
-      .gpio_ops_get_direction = NULL,
-      .gpio_ops_set_value = NULL,
-      .gpio_ops_get_value = NULL,
-  };
   const struct no_os_gpio_init_param adin1110_reset_gpio_ip = {
       .port = 0,
       .number = 0,
@@ -26,20 +18,12 @@ void bm_example_init(void) {
       .extra = NULL,
   };
 
-  const struct no_os_spi_platform_ops spi_ops = {
-      .init = NULL,
-      .write_and_read = NULL,
-      .transfer = NULL,
-      .dma_transfer_sync = NULL,
-      .dma_transfer_async = NULL,
-      .remove = NULL,
-  };
   const struct no_os_spi_init_param adin1110_spi_ip = {
       .device_id = 3,
       .max_speed_hz = 20000000,
       .bit_order = NO_OS_SPI_BIT_ORDER_MSB_FIRST,
       .mode = NO_OS_SPI_MODE_0,
-      .platform_ops = &spi_ops,
+      .platform_ops = &stm32_spi_ops,
       .chip_select = 15, // ?? PA15
       .extra = NULL,
   };
