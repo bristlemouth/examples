@@ -6,8 +6,12 @@
  */
 
 #include "adin1110.h"
+#include "stm32_dma.h"
 #include "stm32_gpio.h"
 #include "stm32_spi.h"
+
+extern DMA_HandleTypeDef handle_GPDMA1_Channel12;
+extern DMA_HandleTypeDef handle_GPDMA1_Channel13;
 
 void bm_example_init(void) {
   const struct no_os_gpio_init_param adin1110_reset_gpio_ip = {
@@ -17,7 +21,38 @@ void bm_example_init(void) {
       .platform_ops = &stm32_gpio_ops,
       .extra = NULL,
   };
+  struct no_os_dma_init_param dma_init = {
+      .id = 0,
+      .num_ch = 2,
+      .platform_ops = &stm32_dma_ops,
+  };
+  struct stm32_dma_channel txdma_channel = {
+      .hdma = &handle_GPDMA1_Channel13,
+      .ch_num = GPDMA1_Channel13,
+      .mem_increment = false,
+      .mem_data_alignment = DATA_ALIGN_BYTE,
+      .per_data_alignment = DATA_ALIGN_BYTE,
+      .dma_mode = DMA_CIRCULAR_MODE};
 
+  struct stm32_dma_channel rxdma_channel = {
+      .hdma = &handle_GPDMA1_Channel12,
+      .ch_num = GPDMA1_Channel12,
+      .mem_increment = true,
+      .mem_data_alignment = DATA_ALIGN_BYTE,
+      .per_data_alignment = DATA_ALIGN_BYTE,
+      .dma_mode = DMA_NORMAL_MODE,
+  };
+  struct stm32_spi_init_param spi_extra_ip = {
+      .chip_select_port = 0, // CS is PA15, GPIO Port A == 0
+      .get_input_clock = HAL_RCC_GetPCLK2Freq,
+      .dma_init = &dma_init,
+      .txdma_ch = &txdma_channel,
+      .rxdma_ch = &rxdma_channel,
+      .irq_num = GPDMA1_Channel12_IRQn,
+      .pwm_init = &cs_pwm_init,
+      .tx_pwm_init = &tx_pwm_init,
+      .alternate = GPIO_AF1_TIM1,
+  };
   const struct no_os_spi_init_param adin1110_spi_ip = {
       .device_id = 3,
       .max_speed_hz = 20000000,
@@ -25,7 +60,7 @@ void bm_example_init(void) {
       .mode = NO_OS_SPI_MODE_0,
       .platform_ops = &stm32_spi_ops,
       .chip_select = 15, // ?? PA15
-      .extra = NULL,
+      .extra = &spi_extra_ip,
   };
 
   struct adin1110_desc *adin1110;
