@@ -51,6 +51,25 @@
 */
 static struct no_os_dma_desc *dma_descriptor;
 
+#if defined (DMA_SRC_DATAWIDTH_BYTE)
+static uint32_t stm32_dma_data_width(enum stm32_dma_data_alignment alignment, bool is_src) {
+	uint32_t width = UINT32_MAX;
+	switch (alignment) {
+	case DATA_ALIGN_BYTE:
+		width = is_src ? DMA_SRC_DATAWIDTH_BYTE : DMA_DEST_DATAWIDTH_BYTE;
+		break;
+	case DATA_ALIGN_HALF_WORD:
+		width = is_src ? DMA_SRC_DATAWIDTH_HALFWORD : DMA_DEST_DATAWIDTH_HALFWORD;
+		break;
+	case DATA_ALIGN_WORD:
+		width = is_src ? DMA_SRC_DATAWIDTH_WORD : DMA_DEST_DATAWIDTH_WORD;
+		break;
+	default:
+	}
+	return width;
+}
+#endif
+
 /**
  * @brief Configure a DMA channel for a transfer.
  * @param channel - The DMA channel descriptor.
@@ -75,11 +94,64 @@ int stm32_dma_config_xfer(struct no_os_dma_ch *channel,
 #else
 	sdma_ch->hdma->Instance = sdma_ch->ch_num;
 #endif
+
+	/* Note: On the STM32U5 at least, register field names
+	 * and HAL init struct members are "source" and "dest".
+	 * On other families they are "memory" and "peripheral". */
+#if defined (DMA_SINC_INCREMENTED)
+	switch (xfer->xfer_type) {
+	case MEM_TO_MEM:
+	  sdma_ch->hdma->Init.SrcInc =
+	      sdma_ch->mem_increment ? DMA_SINC_INCREMENTED : DMA_SINC_FIXED;
+	  sdma_ch->hdma->Init.DestInc =
+	      sdma_ch->mem_increment ? DMA_DINC_INCREMENTED : DMA_DINC_FIXED;
+	  break;
+	case MEM_TO_DEV:
+	  sdma_ch->hdma->Init.SrcInc =
+	      sdma_ch->mem_increment ? DMA_SINC_INCREMENTED : DMA_SINC_FIXED;
+	  sdma_ch->hdma->Init.DestInc =
+	      sdma_ch->per_increment ? DMA_DINC_INCREMENTED : DMA_DINC_FIXED;
+	  break;
+	case DEV_TO_MEM:
+	  sdma_ch->hdma->Init.SrcInc =
+	      sdma_ch->per_increment ? DMA_SINC_INCREMENTED : DMA_SINC_FIXED;
+	  sdma_ch->hdma->Init.DestInc =
+	      sdma_ch->mem_increment ? DMA_DINC_INCREMENTED : DMA_DINC_FIXED;
+	  break;
+	default:
+	  return -EINVAL;
+	}
+#else
 	sdma_ch->hdma->Init.MemInc = sdma_ch->mem_increment ? DMA_MINC_ENABLE :
 				     DMA_MINC_DISABLE;
 	sdma_ch->hdma->Init.PeriphInc = sdma_ch->per_increment ? DMA_PINC_ENABLE :
 					DMA_PINC_DISABLE;
+#endif
 
+#if defined (DMA_SRC_DATAWIDTH_BYTE)
+	uint32_t src_width, dest_width;
+	switch (xfer->xfer_type) {
+	case MEM_TO_MEM:
+	  src_width = stm32_dma_data_width(sdma_ch->mem_data_alignment, true);
+	  dest_width = stm32_dma_data_width(sdma_ch->mem_data_alignment, false);
+	  break;
+	case MEM_TO_DEV:
+	  src_width = stm32_dma_data_width(sdma_ch->mem_data_alignment, true);
+	  dest_width = stm32_dma_data_width(sdma_ch->per_data_alignment, false);
+	  break;
+	case DEV_TO_MEM:
+	  src_width = stm32_dma_data_width(sdma_ch->per_data_alignment, true);
+	  dest_width = stm32_dma_data_width(sdma_ch->mem_data_alignment, false);
+	  break;
+	default:
+	  return -EINVAL;
+	}
+	if (src_width == UINT32_MAX || dest_width == UINT32_MAX) {
+	  return -EINVAL;
+	}
+	sdma_ch->hdma->Init.SrcDataWidth = src_width;
+	sdma_ch->hdma->Init.DestDataWidth = dest_width;
+#else
 	switch (sdma_ch->mem_data_alignment) {
 	case DATA_ALIGN_BYTE:
 		sdma_ch->hdma->Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
@@ -107,13 +179,19 @@ int stm32_dma_config_xfer(struct no_os_dma_ch *channel,
 	default:
 		return -EINVAL;
 	}
+#endif
 
 	switch (sdma_ch->dma_mode) {
 	case DMA_NORMAL_MODE:
 		sdma_ch->hdma->Init.Mode = DMA_NORMAL;
 		break;
 	case DMA_CIRCULAR_MODE:
+#if defined (DMA_CIRCULAR)
 		sdma_ch->hdma->Init.Mode = DMA_CIRCULAR;
+#else
+		/* No other choice */
+		sdma_ch->hdma->Init.Mode = DMA_NORMAL;
+#endif
 		break;
 	default:
 		return -EINVAL;

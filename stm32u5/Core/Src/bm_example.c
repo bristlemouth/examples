@@ -9,6 +9,7 @@
 #include "stm32_dma.h"
 #include "stm32_gpio.h"
 #include "stm32_spi.h"
+//#include "no_os_pwm.h"
 
 extern DMA_HandleTypeDef handle_GPDMA1_Channel12;
 extern DMA_HandleTypeDef handle_GPDMA1_Channel13;
@@ -29,19 +30,65 @@ void bm_example_init(void) {
   struct stm32_dma_channel txdma_channel = {
       .hdma = &handle_GPDMA1_Channel13,
       .ch_num = GPDMA1_Channel13,
-      .mem_increment = false,
+      .mem_increment = true,
+      .per_increment = false,
       .mem_data_alignment = DATA_ALIGN_BYTE,
       .per_data_alignment = DATA_ALIGN_BYTE,
-      .dma_mode = DMA_CIRCULAR_MODE};
-
+      .dma_mode = DMA_NORMAL_MODE
+  };
   struct stm32_dma_channel rxdma_channel = {
       .hdma = &handle_GPDMA1_Channel12,
       .ch_num = GPDMA1_Channel12,
       .mem_increment = true,
+      .per_increment = false,
       .mem_data_alignment = DATA_ALIGN_BYTE,
       .per_data_alignment = DATA_ALIGN_BYTE,
       .dma_mode = DMA_NORMAL_MODE,
   };
+//  struct stm32_pwm_init_param cs_pwm_extra_init_params = {
+//      .prescaler = 1,
+//      .timer_autoreload = true,
+//      .mode = TIM_OC_PWM1,
+//      .timer_chn = 1,
+//      .complementary_channel = false,
+//      .get_timer_clock = HAL_RCC_GetPCLK1Freq,
+//      .clock_divider = 2,
+//      .onepulse_enable = true,
+//      .trigger_enable = true,
+//      .trigger_source = PWM_TS_ITR0,
+//      .trigger_output = PWM_TRGO_ENABLE,
+//  };
+//  struct no_os_pwm_init_param cs_pwm_init = {
+//      .id = 2,
+//      /* time to xfer bytes */
+//      .period_ns = CS_PWM_PERIOD_NS,
+//      .duty_cycle_ns = CS_PWM_DUTY_NS,
+//      .polarity = NO_OS_PWM_POLARITY_HIGH,
+//      .platform_ops = &stm32_pwm_ops,
+//      .extra = &cs_pwm_extra_init_params,
+//  };
+//  struct stm32_pwm_init_param tx_pwm_extra_init_params = {
+//      .prescaler = 1,
+//      .timer_autoreload = true,
+//      .mode = TIM_OC_PWM1,
+//      .timer_chn = 1,
+//      .complementary_channel = false,
+//      .get_timer_clock = HAL_RCC_GetPCLK2Freq,
+//      .clock_divider = 2,
+//      .onepulse_enable = true,
+//      .trigger_enable = true,
+//      .trigger_source = PWM_TS_ITR0,
+//      .dma_enable = true,
+//      .repetitions = TX_PWM_REPS,
+//  };
+//  struct no_os_pwm_init_param tx_pwm_init = {
+//      .id = 8,
+//      /* time to xfer 8 bits */
+//      .period_ns = TX_PWM_PERIOD_NS,
+//      .duty_cycle_ns = TX_PWM_DUTY_NS,
+//      .polarity = NO_OS_PWM_POLARITY_HIGH,
+//      .platform_ops = PWM_OPS,
+//      .extra = &tx_pwm_extra_init_params};
   struct stm32_spi_init_param spi_extra_ip = {
       .chip_select_port = 0, // CS is PA15, GPIO Port A == 0
       .get_input_clock = HAL_RCC_GetPCLK2Freq,
@@ -49,8 +96,9 @@ void bm_example_init(void) {
       .txdma_ch = &txdma_channel,
       .rxdma_ch = &rxdma_channel,
       .irq_num = GPDMA1_Channel12_IRQn,
-      .pwm_init = &cs_pwm_init,
-      .tx_pwm_init = &tx_pwm_init,
+      /* TODO: If adin works with these null, delete the commented structs above */
+      .pwm_init = NULL,
+      .tx_pwm_init = NULL,
       .alternate = GPIO_AF1_TIM1,
   };
   const struct no_os_spi_init_param adin1110_spi_ip = {
