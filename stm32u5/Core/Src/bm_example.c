@@ -15,12 +15,17 @@ extern DMA_HandleTypeDef handle_GPDMA1_Channel12;
 extern DMA_HandleTypeDef handle_GPDMA1_Channel13;
 
 void bm_example_init(void) {
+  HAL_GPIO_WritePin(GPIOH, GPIO_PIN_1, GPIO_PIN_SET);
+  struct stm32_gpio_init_param adin1110_reset_gpio_extra = {
+      .mode = GPIO_MODE_OUTPUT_PP,
+      .speed = GPIO_SPEED_FREQ_LOW,
+  };
   const struct no_os_gpio_init_param adin1110_reset_gpio_ip = {
       .port = 0,
       .number = 0,
-      .pull = NO_OS_PULL_UP,
+      .pull = NO_OS_PULL_NONE,
       .platform_ops = &stm32_gpio_ops,
-      .extra = NULL,
+      .extra = &adin1110_reset_gpio_extra,
   };
   struct no_os_dma_init_param dma_init = {
       .id = 0,
@@ -117,6 +122,7 @@ void bm_example_init(void) {
       .comm_param = adin1110_spi_ip,
       .reset_param = adin1110_reset_gpio_ip,
       .append_crc = false,
+      .mac_address = { 0x00, 0x00, 0x5c, 0x79, 0x78, 0xbf }
   };
   adin1110_init(&adin1110, &adin1110_ip);
 }
