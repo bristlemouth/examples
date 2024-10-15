@@ -22,6 +22,7 @@
 #include "stm32u5xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "hal_port_specific.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

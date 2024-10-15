@@ -122,7 +122,8 @@ uint32_t HAL_RegisterCallback(HAL_Callback_t const *intCallback, void *hDevice)
 {
     if (intCallback)
     {
-        INTERRUPT_CALLBACK = *intCallback;
+        // The type is incorrect in the Analog Devices driver
+        INTERRUPT_CALLBACK = (HAL_Callback_t)intCallback;
         INTERRUPT_CB_PARAM = hDevice;
     }
     return 0;
@@ -201,7 +202,8 @@ uint32_t HAL_SpiRegisterCallback(HAL_Callback_t const *spiCallback, void *hDevic
 {
     if (spiCallback)
     {
-        SPI_CALLBACK = *spiCallback;
+        // The type is incorrect in the Analog Devices driver
+        SPI_CALLBACK = (HAL_Callback_t)spiCallback;
         SPI_CB_PARAM = hDevice;
     }
     return 0;
