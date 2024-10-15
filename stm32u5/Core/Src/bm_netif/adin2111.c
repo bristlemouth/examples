@@ -147,9 +147,11 @@ adi_eth_Result_e adin2111_Init(adin2111_DeviceHandle_t hDevice, adin2111_DriverC
     {
         goto end;
     }
-    macConfig2.P1_FWD_UNK2P2 = 1;
-    macConfig2.P2_FWD_UNK2P1 = 1;
-    macConfig2.PORT_CUT_THRU_EN = 1;
+    // macConfig2.P1_FWD_UNK2P2 = 1;
+    // macConfig2.P2_FWD_UNK2P1 = 1;
+    macConfig2.P1_FWD_UNK2HOST = 1;
+    macConfig2.P2_FWD_UNK2HOST = 1;
+    macConfig2.PORT_CUT_THRU_EN = 0;
     result = adin2111_WriteRegister(hDevice, ADDR_MAC_CONFIG2, macConfig2.VALUE32);
     if (result != ADI_ETH_SUCCESS)
     {
