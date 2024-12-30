@@ -1,0 +1,9 @@
+[submodule "esp32/lwip"]
+	path = esp32/lwip
+	url = https://git.savannah.gnu.org/git/lwip.git
+[submodule "esp32/esp-idf"]
+	path = esp32/esp-idf
+	url = https://github.com/espressif/esp-idf.git
+[submodule "esp32/bm_core"]
+	path = esp32/bm_core
+	url = https://github.com/bristlemouth/bm_core.git
