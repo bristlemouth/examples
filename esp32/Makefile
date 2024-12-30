@@ -20,7 +20,7 @@ Arguments := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 all: test
 
 init:
-	@export IDF_TOOLS_PATH="$$HOME/miniconda3/envs/bristlemouth_esp32" && ./esp-idf/install.sh
+	@export IDF_TOOLS_PATH="$$HOME/miniconda3/envs/$(CONDA_DEFAULT_ENV)" && ./esp-idf/install.sh
 
 build:
 	@bash ./scripts/build.sh $(Arguments)
